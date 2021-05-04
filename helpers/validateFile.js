@@ -9,41 +9,32 @@ function exceptions(isFormValid, msg, err) {
   this.message = msg;
 }
 
-//Comparing keys and headers
-
-function compareKeys(k1, k2) {
-  let len1 = k1.length;
-  let len2 = k2.length;
-  if (len1 !== len2) return false;
-  for (let i = 0; i < len1; i++) {
-    if (!k2.includes(k1[i])) return { success: false, key1: k1[i], key2: k2 };
-  }
-  return { success: true };
-}
-
 //Validate date
 //hard coded if better perfomance please change
 function validateDate(date) {
   if (moment(date, "MM/DD/YYYY", true).isValid()) {
     return true;
+  } else {
+    return false;
   }
-  return false;
 }
 
 //Validate payslip
 function validateJson(json) {
-  json.forEach(({ BillingCycle, StartDate, EndDate, ...data }, index) => {
+  json.forEach(({ field1, field2, field3 }, index) => {
     const message = new Object();
-    const startDate = new Date(StartDate);
-    if (parseInt(BillingCycle) < 1 || parseInt(BillingCycle) > 12) {
+
+    if (parseInt(field1) < 1 || parseInt(field1) > 12) {
       message.error = `Billing Cycle not on range at row ${index + 1}`;
     }
 
-    if (validateDate(StartDate))
+    if (!validateDate(field2)) {
       message.starDate = `Invalid Start Date format at row ${index + 1}`;
+    }
 
-    if (validateDate(EndDate))
+    if (!validateDate(field3)) {
       message.endDate = `Invalid End Date at row ${index + 1}`;
+    }
 
     if (Object.keys(message).length >= 1)
       throw new exceptions(false, message, "Please fill the correct formats");
@@ -52,25 +43,14 @@ function validateJson(json) {
 
 exports.validateFile = (json) => {
   try {
-    const key = Object.keys(json[0]);
-
-    const result = compareKeys(key, header);
-    if (!result.success) {
-      if (!result.key1 || !result.key2)
-        throw new exceptions(
-          false,
-          `Unable to process wrong in header input`,
-          `It should be ${header}`
-        );
+    if (json.length === 0) {
       throw new exceptions(
         false,
-        `Unable to process wrong in header input ${result.key1}`,
-        `It should be ${result.key2}`
+        { error: "No request(s) to read from the input file" },
+        "Please fill the correct formats"
       );
     }
-
     validateJson(json);
-
     return {
       success: true,
     };

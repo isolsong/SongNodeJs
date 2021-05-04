@@ -5,7 +5,7 @@ const { validateFile } = require("../helpers/validateFile");
 exports.importCsv = async (req, res) => {
   try {
     if (req.file) {
-      const json = await csv().fromFile(req.file.path);
+      const json = await csv({ noheader: true }).fromFile(req.file.path);
 
       const valid = validateFile(json);
 
