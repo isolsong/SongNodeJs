@@ -2,8 +2,8 @@ const mongodb = require("mongodb");
 //const {Bars} = require("../../bars.model");
 const MongoClient = mongodb.MongoClient;
 var NumberInt = require("mongodb").Int32;
-module.exports = function () {
-const connectionURL = "mongodb://127.0.0.1:27017";
+
+const connectionURL = "mongodb://127.0.0.1:27017/";
 const databaseName = "bars_db";
 
 MongoClient.connect(
@@ -11,9 +11,10 @@ MongoClient.connect(
   { useNewUrlParser: true },
   (error, client) => {
     if (error) {
+      console.log(error);
       return console.log("Unable to connect to database!");
     }
-
+    console.log("connected to db");
     const db = client.db(databaseName);
 
     db.collection("billings").insertMany(
@@ -112,9 +113,8 @@ MongoClient.connect(
           return console.log("Unable to insert tasks!");
         }
 
-       // console.log(result.ops);
+        // console.log(result.ops);
       }
     );
   }
 );
-}

@@ -1,7 +1,9 @@
 const fs = require("fs");
 const csv = require("csvtojson");
 const { validateFile } = require("../helpers/validateFile");
-const {Bars} = require("../models/bars.model.js")
+const mongodb = require("mongodb");
+const assert = require("assert");
+const MongoClient = mongodb.MongoClient;
 
 exports.importCsv = async (req, res) => {
   try {
@@ -20,13 +22,37 @@ exports.importCsv = async (req, res) => {
           error: valid.error,
         });
       }
+      const databaseName = "bars_db";
 
-      json.forEach(async () => {
+      json.forEach(async ({ field1, field2, field3 }) => {
+        let billingCycle = field1;
+        let startDate = field2;
+        let endDate = field3;
+
         try {
-          const barsData = await Bars.find();
-          console.log(barsData)
+          console.log(field1);
+          const connectionURL = "mongodb://127.0.0.1:27017/";
+          MongoClient.connect(
+            connectionURL,
+            { useNewUrlParser: true },
+            (error, client) => {
+              if (error) {
+                console.log(error);
+                return console.log("Unable to connect to database!");
+              }
+              console.log("connected to db");
+              const db = client.db(databaseName);
+
+              db.collection("billings")
+                .find({})
+                .toArray(function (err, docs) {
+                  //compare to csv on line 28-30
+                  console.log(docs);
+                });
+            }
+          );
         } catch (error) {
-          console.log(error)
+          console.log(error);
           return res.status(500).json({
             error: error,
           });

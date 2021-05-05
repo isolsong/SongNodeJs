@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 //const validator = require("validator");
 const mongodb = require("mongodb");
 
-
-const barsSchema = new mongoose.Schema({
+const barsSchema = new mongodb.Schema({
   billingCycle: Number,
   billingMonth: String,
   amount: String,
@@ -26,8 +25,8 @@ const barsSchema = new mongoose.Schema({
   },
 });
 // const barsSchema = new mongoose.Schema({
-//   billingCycle: { 
-//     type: Number, 
+//   billingCycle: {
+//     type: Number,
 //     required: true,
 
 //     // validate(value) {
@@ -81,9 +80,9 @@ const barsSchema = new mongoose.Schema({
 // const Billing = mongoose.model("billings", billingSchema);
 // module.exports = Billing;
 
-const Bars = mongoose.model("BarsData", barsSchema);
+const Bars = mongodb.model("BarsData", barsSchema);
 
-exports.Bars = Bars;
+// exports.Bars = Bars;
 
 // mongoose.connect('mongodb://127.0.0.1:27017/Bars-service.isol.joy.song-api', {
 //     useNewUrlParser: true,
@@ -91,4 +90,3 @@ exports.Bars = Bars;
 //     useFindAndModify: false,
 
 // })
-

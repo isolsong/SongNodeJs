@@ -1,10 +1,10 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
 
+const { Bars } = require("./models/billing.queries");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-require("./src/db/mongodb.js")();
+
 app.use(require("./routes/upload"));
 
 // const uri =
@@ -20,5 +20,5 @@ app.use(require("./routes/upload"));
 //     console.log("Connected to DB");
 //   });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
