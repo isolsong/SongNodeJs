@@ -1,6 +1,7 @@
 const fs = require("fs");
 const csv = require("csvtojson");
 const { validateFile } = require("../helpers/validateFile");
+const {Bars} = require("../models/bars.model.js")
 
 exports.importCsv = async (req, res) => {
   try {
@@ -20,14 +21,17 @@ exports.importCsv = async (req, res) => {
         });
       }
 
-      // json.forEach(async ({ BillingCycle, StartDate, EndDate }) => {
-      //   try {
-      //   } catch (error) {
-      //     return res.status(500).json({
-      //       error: error,
-      //     });
-      //   }
-      // });
+      json.forEach(async () => {
+        try {
+          const barsData = await Bars.find();
+          console.log(barsData)
+        } catch (error) {
+          console.log(error)
+          return res.status(500).json({
+            error: error,
+          });
+        }
+      });
 
       if (req.file.path) {
         fs.unlinkSync(req.file.path);

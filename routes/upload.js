@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const upload = require("../helpers/ImportFile");
-
 const uploadHandler = require("../controller/upload");
 
 router.get("/upload", (req, res) => {
@@ -19,6 +18,7 @@ router.post(
           message: "Internal server error",
         });
       } else if (err) {
+        console.log(err)
         return res.status(404).json({
           success: false,
           error: "File format not supported for processing",
